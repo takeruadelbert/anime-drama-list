@@ -1,5 +1,4 @@
-=================
-Anime Drama List 
+Anime Drama List
 =================
 
 developed by Takeru T.K.
