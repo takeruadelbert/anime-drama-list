@@ -364,7 +364,7 @@ class AppController extends Controller {
                     ]
                 ),
             ),
-            "order"=>"Menu.ordering_number",
+            "order" => "Menu.ordering_number",
         ));
         $roleData = array();
 
@@ -452,7 +452,7 @@ class AppController extends Controller {
                         "label" => $subMenu['SubMenu']['label'],
                         "alias" => $subMenu['Module']['alias'],
                         "moduleLink" => $ml,
-                        "content" => $this->_subMenu($subMenu,$user_group_id),
+                        "content" => $this->_subMenu($subMenu, $user_group_id),
                         "submenuId" => $subMenu["SubMenu"]["id"],
                     );
                 }
@@ -610,18 +610,18 @@ class AppController extends Controller {
             $this->{ Inflector::classify($this->name) }->set($this->data);
             if ($this->{ Inflector::classify($this->name) }->saveAll($this->{ Inflector::classify($this->name) }->data, array('validate' => 'only', "deep" => true))) {
                 $this->{ Inflector::classify($this->name) }->saveAll($this->{ Inflector::classify($this->name) }->data, array('deep' => true));
-                $this->Session->setFlash(__("Data berhasil disimpan"), 'default', array(), 'success');
+                $this->Session->setFlash(__("Data has been saved successfully."), 'default', array(), 'success');
                 $this->redirect(array('action' => 'admin_index'));
             } else {
                 $this->validationErrors = $this->{ Inflector::classify($this->name) }->validationErrors;
-                $this->Session->setFlash(__("Harap mengecek kembali kesalahan dibawah."), 'default', array(), 'danger');
+                $this->Session->setFlash(__("Ups! Something's wrong. Please double check below."), 'default', array(), 'danger');
             }
         }
     }
 
     function admin_edit($id = null) {
         if (!$this->{ Inflector::classify($this->name) }->exists($id)) {
-            throw new NotFoundException(__('Data tidak ditemukan'));
+            throw new NotFoundException(__('Data Not Found'));
         } else {
             if ($this->request->is("post") || $this->request->is("put")) {
                 $this->{ Inflector::classify($this->name) }->set($this->data);
@@ -629,7 +629,7 @@ class AppController extends Controller {
                 if ($this->{ Inflector::classify($this->name) }->saveAll($this->{ Inflector::classify($this->name) }->data, array('validate' => 'only', "deep" => true))) {
                     if (!is_null($id)) {
                         $this->{ Inflector::classify($this->name) }->saveAll($this->{ Inflector::classify($this->name) }->data, array('deep' => true));
-                        $this->Session->setFlash(__("Data berhasil diubah"), 'default', array(), 'success');
+                        $this->Session->setFlash(__("Data has been edited successfully."), 'default', array(), 'success');
                         $this->redirect(array('action' => 'admin_index'));
                     } else {
                         
@@ -647,6 +647,20 @@ class AppController extends Controller {
                 ));
                 $this->data = $rows;
             }
+        }
+    }
+
+    function admin_view($id = null) {
+        if ($this->{ Inflector::classify($this->name) }->exists($id)) {
+            $rows = $this->{ Inflector::classify($this->name) }->find("first", array(
+                'conditions' => array(
+                    Inflector::classify($this->name) . ".id" => $id
+                ),
+                'recursive' => 2
+            ));
+            $this->data = $rows;
+        } else {
+            throw new NotFoundException(__("Data Not Found."));
         }
     }
 
